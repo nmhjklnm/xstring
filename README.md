@@ -5,6 +5,7 @@
 ![PyPI](https://img.shields.io/pypi/v/lazynote)
 ![License](https://img.shields.io/pypi/l/lazynote)
 ![Python](https://img.shields.io/pypi/pyversions/lazynote)
+[![Documentation Status](https://readthedocs.org/projects/lazynote/badge/?version=latest)](https://lazynote.readthedocs.io/en/latest/)
 
 **Lazynote** is an AI-powered tool that can automatically generate documentation comments for classes, modules, and packages. It also supports the translation and customization of existing comments. 💡📝
 
@@ -30,9 +31,10 @@ Here is a simple example demonstrating how to use Lazynote to automatically gene
 ```python
 import pytest
 from lazynote.manager import SimpleManager
+
 manager = SimpleManager(pattern='fill')
 manager.traverse(lazyllm_package.components, 
-                skip_modules=['lazyllm.components.deploy.relay.server'])
+                 skip_modules=['lazyllm.components.deploy.relay.server'])
 ```
 
 ## Features Overview 📚
@@ -44,6 +46,10 @@ Lazynote provides the following modes to easily customize all comments across th
 - **CLEAR**: Clear existing comments. 🗑️
 - **FILL**: Fill in missing comments. 📝
 
+## Documentation 📖
+
+For more detailed information and advanced usage, please refer to our [official documentation](https://lazynote.readthedocs.io/en/latest/). ![Documentation Status](https://readthedocs.org/projects/lazynote/badge/?version=latest)
+
 ## Contributing 🌟
 
 Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for more information. 💖
@@ -53,3 +59,4 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for mo
 This project is licensed under the MIT License. For more details, please refer to [LICENSE](LICENSE). 📝
 
 ---
+
