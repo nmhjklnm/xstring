@@ -1,0 +1,10 @@
+/* Custom CSS */
+.md-nav__title {
+    font-size: 1.5rem;
+    color: #4CAF50;
+  }
+  
+  .md-footer {
+    text-align: center;
+    font-size: 0.875rem;
+  }

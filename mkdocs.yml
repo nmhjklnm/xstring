@@ -1,0 +1,49 @@
+site_name: Lazynote Documentation
+nav:
+  - Home: index.md
+  - Features: features.md
+  - Installation: installation.md
+  - Quick Start: quickstart.md
+  - API:
+      - Overview: api/overview.md
+      - Config: api/config.md
+      - Editor: api/editor.md
+      - Manager: api/manager.md
+      - Parser: api/parser.md
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.top
+    - search.highlight
+    - search.suggest
+  palette:
+    - scheme: default
+      primary: '#833AB4'  # 紫色
+      accent: '#E1306C'   # 粉红色
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: '#833AB4'  # 紫色
+      accent: '#E1306C'   # 粉红色
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  font:
+    text: 'Roboto'
+    code: 'Roboto Mono'
+  logo: 'https://img.icons8.com/ios-filled/50/000000/rocket.png'
+  favicon: 'https://img.icons8.com/ios-filled/50/000000/rocket.png'
+  custom_dir: 'overrides'
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/nmhjklnm
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/nmhjklnm
+extra_css:
+  - stylesheets/extra.css
+plugins:
+  - search
+  - mkdocstrings
