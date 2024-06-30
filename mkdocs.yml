@@ -35,7 +35,6 @@ theme:
     code: 'Roboto Mono'
   logo: 'https://img.icons8.com/ios-filled/50/000000/rocket.png'
   favicon: 'https://img.icons8.com/ios-filled/50/000000/rocket.png'
-  custom_dir: 'overrides'
 extra:
   social:
     - icon: fontawesome/brands/github
