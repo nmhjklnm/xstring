@@ -1,3 +1,3 @@
 # Parser Module
 
-::: src.lazynote.parser
+::: lazynote.parser

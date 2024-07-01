@@ -1,3 +1,3 @@
 # Config Module
 
-::: src.lazynote.config
+::: lazynote.config

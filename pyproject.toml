@@ -29,6 +29,7 @@ pre-commit = "^3.3.2"
 coverage = "^7.5.4"
 pytest-cov = "^5.0.0"
 mkdocstrings = "^0.25.1"
+mkdocs-autorefs = "^1.0.1"
 
 [tool.poetry.group.test.dependencies]
 fastapi = ">=0.111.0"

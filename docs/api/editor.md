@@ -1,3 +1,3 @@
 # Editor Module
 
-::: src.lazynote.editor
+::: lazynote.editor

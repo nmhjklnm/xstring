@@ -1,3 +1,3 @@
 # Manager Module
 
-::: src.lazynote.manager
+::: lazynote.manager

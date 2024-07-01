@@ -4,7 +4,7 @@ nav:
   - Features: features.md
   - Installation: installation.md
   - Quick Start: quickstart.md
-  - API:
+  - API Reference:
       - Overview: api/overview.md
       - Config: api/config.md
       - Editor: api/editor.md
@@ -14,21 +14,28 @@ theme:
   name: material
   features:
     - navigation.tabs
+    - navigation.footer
     - navigation.top
     - search.highlight
     - search.suggest
   palette:
-    - scheme: default
-      primary: '#833AB4'  # 紫色
-      accent: '#E1306C'   # 粉红色
+    - media: (prefers-color-scheme)
       toggle:
-        icon: material/toggle-switch-off-outline
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - accent: purple
+      media: "(prefers-color-scheme: light)"
+      primary: white
+      scheme: default
+      toggle:
+        icon: material/brightness-7
         name: Switch to dark mode
-    - scheme: slate
-      primary: '#833AB4'  # 紫色
-      accent: '#E1306C'   # 粉红色
+    - accent: purple
+      media: "(prefers-color-scheme: dark)"
+      primary: black
+      scheme: slate
       toggle:
-        icon: material/toggle-switch
+        icon: material/brightness-4
         name: Switch to light mode
   font:
     text: 'Roboto'
@@ -36,13 +43,18 @@ theme:
   logo: 'https://img.icons8.com/ios-filled/50/000000/rocket.png'
   favicon: 'https://img.icons8.com/ios-filled/50/000000/rocket.png'
 extra:
+  generator: false
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/nmhjklnm
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/nmhjklnm
-extra_css:
-  - stylesheets/extra.css
 plugins:
   - search
-  - mkdocstrings
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            allow_inspection: true
+            show_source: true
+  - autorefs
