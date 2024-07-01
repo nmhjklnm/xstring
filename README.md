@@ -5,7 +5,7 @@
 ![PyPI](https://img.shields.io/pypi/v/lazynote)
 ![License](https://img.shields.io/pypi/l/lazynote)
 ![Python](https://img.shields.io/pypi/pyversions/lazynote)
-[![Documentation Status](https://nmhjklnm.github.io/lazynote/)](https://nmhjklnm.github.io/lazynote/)
+[![Docs](https://img.shields.io/badge/docs-view%20online-blue)](https://nmhjklnm.github.io/lazynote/)
 
 **Lazynote** is an AI-powered tool that can automatically generate documentation comments for classes, modules, and packages. It also supports the translation and customization of existing comments. 💡📝
 
