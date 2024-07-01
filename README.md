@@ -48,8 +48,7 @@ Lazynote provides the following modes to easily customize all comments across th
 
 ## Documentation 📖
 
-For more detailed information and advanced usage, please refer to our [official documentation](https://lazynote.readthedocs.io/en/latest/). ![Documentation Status](https://readthedocs.org/projects/lazynote/badge/?version=latest)
-
+For more detailed information and advanced usage, please refer to our [![Docs](https://img.shields.io/badge/docs-view%20online-blue)](https://nmhjklnm.github.io/lazynote/). [![Docs](https://img.shields.io/badge/docs-view%20online-blue)](https://nmhjklnm.github.io/lazynote/)
 ## Contributing 🌟
 
 Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for more information. 💖
