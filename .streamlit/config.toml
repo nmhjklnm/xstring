@@ -1,0 +1,17 @@
+[server]
+headless = true
+
+[theme]
+base = "light"
+
+[global]
+showWarningOnDirectExecution = false
+
+[runner]
+magicEnabled = false
+
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "minimal"

@@ -88,14 +88,28 @@ class BaseEditor(cst.CSTTransformer):
                 f'"""{new_docstring}"""'))]) if new_docstring else None
         )
 
-        # Insert the new docstring at the beginning of the body if it exists
-        if new_docstring_node:
-            new_body.insert(0, new_docstring_node)
+        # Handle single-line functions or methods
+        if len(new_body) == 1 and isinstance(new_body[0], cst.SimpleStatementLine):
+            # Convert single-line function to multi-line if necessary
+            single_line_stmt = new_body[0]
+            if new_docstring_node:
+                new_body = [new_docstring_node, single_line_stmt]
+            else:
+                new_body = [single_line_stmt]
+        else:
+            # Insert the new docstring at the beginning of the body if it exists
+            if new_docstring_node:
+                new_body.insert(0, new_docstring_node)
 
         # Update the body with the new list of statements
-        if isinstance(updated_node.body, tuple):
-            updated_body = tuple(new_body)
-        else:
-            updated_body = updated_node.body.with_changes(body=new_body)
+        try:
+            if isinstance(updated_node.body, tuple):
+                updated_body = tuple(new_body)
+            else:
+                updated_body = updated_node.body.with_changes(body=new_body)
+        except Exception as e:
+            print(f"Error updating body with new statements: {new_body}")
+            print(f"Error message: {e}")
+            raise
 
         return updated_node.with_changes(body=updated_body)

@@ -1,18 +1,14 @@
 import inspect
 import textwrap
-from enum import Enum
+
 from typing import Callable, Optional
 
 import libcst as cst
 
-from lazynote.manager.base import BaseManager
+from lazynote.manager.base import BaseManager,DocstringMode
 
 
-class DocstringMode(str, Enum):
-    TRANSLATE = "translate"
-    POLISH = "polish"
-    CLEAR = "clear"
-    FILL = "fill"
+
 
 class DocstringHandler:
     @staticmethod
@@ -57,7 +53,7 @@ class SimpleManager(BaseManager):
                         - DocstringMode.CLEAR
                         - DocstringMode.FILL
     """
-    pattern: DocstringMode
+    
 
     def gen_docstring(self, old_docstring: Optional[str], node_code: str) -> str:
 
@@ -65,16 +61,3 @@ class SimpleManager(BaseManager):
 
         return handler(old_docstring, node_code)
 
-    def modify_docstring(self, module):
-
-        source_code = inspect.getsource(module)
-        source_code = textwrap.dedent(source_code)  # 去除多余的缩进
-        tree = cst.parse_module(source_code)
-
-        from lazynote.editor import \
-            BaseEditor  # Lazy import to avoid circular dependency
-        transformer = BaseEditor(
-            gen_docstring=self.gen_docstring, pattern=self.pattern,module=module)
-        modified_tree = tree.visit(transformer)
-        self._write_code_to_file(module, modified_tree.code)
-        return modified_tree.code

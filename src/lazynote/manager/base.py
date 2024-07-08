@@ -8,6 +8,17 @@ from pydantic import BaseModel, Field
 
 from lazynote.parser import BaseParser
 from lazynote.schema import MemberType, get_member_type
+from lazynote.editor import BaseEditor  # Lazy import to avoid circular dependency
+from enum import Enum
+import importlib
+import pkgutil
+import asyncio
+
+class DocstringMode(str, Enum):
+    TRANSLATE = "translate"
+    POLISH = "polish"
+    CLEAR = "clear"
+    FILL = "fill"
 
 
 class BaseManager(BaseModel, ABC):
@@ -17,7 +28,8 @@ class BaseManager(BaseModel, ABC):
     子类需要重写 gen_docstring 方法以生成自定义的文档字符串。
     """
 
-    parser: Optional[BaseParser] = Field(default=None)
+    parser: Optional[BaseParser] = Field(default_factory=BaseParser)
+    pattern: DocstringMode
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -51,10 +63,7 @@ class BaseManager(BaseModel, ABC):
         elif hasattr(member, '__wrapped__'):
             return member.__wrapped__.__module__ == module.__name__
         return False
-    
-    @abstractmethod
-    def modify_docstring(self, module):
-        pass
+
 
     def _write_code_to_file(self, module, code: str):
         # 获取模块文件的路径
@@ -68,17 +77,34 @@ class BaseManager(BaseModel, ABC):
         if skip_modules is None:
             skip_modules = []
 
-        member_type = get_member_type(obj)
-        module = inspect.getmodule(obj)
+        if get_member_type(obj) == MemberType.PACKAGE:
+            # 遍历包中的所有模块和子包
+            for importer, modname, ispkg in pkgutil.walk_packages(obj.__path__, obj.__name__ + "."):
+               
+                if modname in skip_modules:
+                    continue  # 跳过不需要处理的模块
+                if ispkg:
+                    # 包级别docstrings暂不处理
+                    continue
+                
+                try:
+                    submodule = importlib.import_module(modname)
+                    self.parser.parse(submodule,self)
+                except ImportError as e:
+                    print(f"Error importing {modname}: {e}")
 
-        if module and module.__name__ in skip_modules:
-            print(f"Skipping module: {module.__name__}")
-            return
+        elif get_member_type(obj) == MemberType.MODULE:
+            # 处理单个模块或其他类型的对象
+            self.parser.parse(obj, self)
 
-        # 直接使用 BaseParser 作为工具类
-        self.parser.parse(obj, module, self,skip_modules=skip_modules)
+    def modify_docstring(self, module):
 
-        if member_type in (MemberType.PACKAGE):
-            for name, member in inspect.getmembers(obj):
-                if self.is_defined_in_module(member, module):
-                    self.traverse(member, skip_modules=skip_modules)
+        source_code = inspect.getsource(module)
+        source_code = textwrap.dedent(source_code)  # 去除多余的缩进
+        tree = cst.parse_module(source_code)
+
+        transformer = BaseEditor(
+            gen_docstring=self.gen_docstring, pattern=self.pattern,module=module)
+        modified_tree = tree.visit(transformer)
+        self._write_code_to_file(module, modified_tree.code)
+        return modified_tree.code

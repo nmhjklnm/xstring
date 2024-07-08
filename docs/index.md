@@ -46,10 +46,10 @@ Lazynote provides the following modes to easily customize all comments across th
 
 ## Contributing 🌟
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for more information. 💖
+Contributions are welcome! Please read for more information. 💖
 
 ## License 📄
 
-This project is licensed under the MIT License. For more details, please refer to [LICENSE](LICENSE). 📝
+This project is licensed under the MIT License. For more details, please refer to . 📝
 
 ---

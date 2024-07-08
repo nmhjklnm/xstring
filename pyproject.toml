@@ -43,6 +43,7 @@ gradio = ">=3.48.0"
 gradio_client = ">=0.6.1"
 protobuf = ">=3.20.1"
 setuptools = "*"
+six = "^1.16.0"
 
 [tool.poetry.scripts]
 lazynote = "lazynote.cmdline:main"

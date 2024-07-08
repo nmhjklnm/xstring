@@ -179,3 +179,4 @@ venv.bak/
 ### Dynaconf config
 **/*.local.yml
 **/.secrets.yml
+tem.ipynb
