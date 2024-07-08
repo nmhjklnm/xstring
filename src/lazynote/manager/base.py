@@ -81,8 +81,8 @@ class BaseManager(BaseModel, ABC):
             # 遍历包中的所有模块和子包
             for importer, modname, ispkg in pkgutil.walk_packages(obj.__path__, obj.__name__ + "."):
                
-                if modname in skip_modules:
-                    continue  # 跳过不需要处理的模块
+                if any(modname.startswith(skip_mod) for skip_mod in skip_modules):
+                    continue  # 跳过不需要处理的模块及其子模块
                 if ispkg:
                     # 包级别docstrings暂不处理
                     continue
