@@ -21,7 +21,6 @@ def test_traverse_components(lazyllm_package, manager):
 
 def test_traverse_module(lazyllm_package, manager):
     manager.traverse(lazyllm_package.module, skip_modules=[
-        'lazyllm.module.module'
     ])
 
 def test_traverse_tools(lazyllm_package, manager):

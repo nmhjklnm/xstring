@@ -88,18 +88,33 @@ class BaseEditor(cst.CSTTransformer):
                 f'"""{new_docstring}"""'))]) if new_docstring else None
         )
 
-        # Handle single-line functions or methods
-        if len(new_body) == 1 and isinstance(new_body[0], cst.SimpleStatementLine):
-            # Convert single-line function to multi-line if necessary
-            single_line_stmt = new_body[0]
-            if new_docstring_node:
-                new_body = [new_docstring_node, single_line_stmt]
+
+
+
+
+
+
+        if new_docstring_node:
+            if isinstance(updated_node.body, cst.SimpleStatementSuite):  # 检查函数体是否为 SimpleStatementSuite 如果为单行函数
+                # 创建一个新的 IndentedBlock，包含原函数体的语句
+                new_body = cst.IndentedBlock(
+                    body=[
+                        new_docstring_node,
+                        cst.SimpleStatementLine(
+                            body=[
+                                cst.Expr(
+                                    value=updated_node.body.body[0]
+                                )
+                            ]
+                        )
+                    ]
+                )
+
+                # 用新的 IndentedBlock 替换原函数体
+                return updated_node.with_changes(body=new_body)
             else:
-                new_body = [single_line_stmt]
-        else:
-            # Insert the new docstring at the beginning of the body if it exists
-            if new_docstring_node:
                 new_body.insert(0, new_docstring_node)
+
 
         # Update the body with the new list of statements
         try:

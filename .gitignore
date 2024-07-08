@@ -180,3 +180,4 @@ venv.bak/
 **/*.local.yml
 **/.secrets.yml
 tem.ipynb
+tmp.py
