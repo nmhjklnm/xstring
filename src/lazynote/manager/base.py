@@ -80,13 +80,13 @@ class BaseManager(BaseModel, ABC):
         if get_member_type(obj) == MemberType.PACKAGE:
             # 遍历包中的所有模块和子包
             for importer, modname, ispkg in pkgutil.walk_packages(obj.__path__, obj.__name__ + "."):
-               
+
                 if any(modname.startswith(skip_mod) for skip_mod in skip_modules):
                     continue  # 跳过不需要处理的模块及其子模块
                 if ispkg:
                     # 包级别docstrings暂不处理
                     continue
-                
+
                 try:
                     submodule = importlib.import_module(modname)
                     self.parser.parse(submodule,self)
@@ -96,6 +96,38 @@ class BaseManager(BaseModel, ABC):
         elif get_member_type(obj) == MemberType.MODULE:
             # 处理单个模块或其他类型的对象
             self.parser.parse(obj, self)
+
+    async def atraverse(self, obj, skip_modules=None, max_concurrency=10):
+        if skip_modules is None:
+            skip_modules = []
+
+        semaphore = asyncio.Semaphore(max_concurrency)
+
+        async def sem_task(task):
+            async with semaphore:
+                await task
+
+        loop = asyncio.get_event_loop()
+
+        if get_member_type(obj) == MemberType.PACKAGE:
+            tasks = []
+            for importer, modname, ispkg in pkgutil.iter_modules(obj.__path__, obj.__name__ + "."):
+                if any(modname.startswith(skip_mod) for skip_mod in skip_modules):
+                    continue  # 跳过不需要处理的模块及其子模块
+                if ispkg:
+                    continue  # 包级别docstrings暂不处理
+
+                try:
+                    submodule = importlib.import_module(modname)
+                    tasks.append(sem_task(loop.run_in_executor(None, self.parser.parse, submodule, self)))
+                except ImportError as e:
+                    print(f"Error importing {modname}: {e}")
+
+            await asyncio.gather(*tasks)
+
+        elif get_member_type(obj) == MemberType.MODULE:
+            await sem_task(loop.run_in_executor(None, self.parser.parse, obj, self))
+
 
     def modify_docstring(self, module):
 

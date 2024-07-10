@@ -89,11 +89,6 @@ class BaseEditor(cst.CSTTransformer):
         )
 
 
-
-
-
-
-
         if new_docstring_node:
             if isinstance(updated_node.body, cst.SimpleStatementSuite):  # 检查函数体是否为 SimpleStatementSuite 如果为单行函数
                 # 创建一个新的 IndentedBlock，包含原函数体的语句
