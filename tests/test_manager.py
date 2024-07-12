@@ -1,6 +1,6 @@
 import pytest
 
-from lazynote.manager import SimpleManager
+from xstring.manager import SimpleManager
 
 # 定义模式列表
 PATTERNS = ['clear','fill']

@@ -1,7 +1,7 @@
 ## Installation 📦
 
-You can easily install Lazynote using `pip`:
+You can easily install xstring using `pip`:
 
 ```python
-pip install lazynote
+pip install xstring
 ```

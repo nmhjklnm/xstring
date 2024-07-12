@@ -1,5 +1,5 @@
 """Tests"""
-from lazynote import __version__
+from xstring import __version__
 
 
 def test_version():

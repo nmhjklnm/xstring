@@ -1,2 +1,2 @@
-"""lazynote"""
+"""xstring"""
 __version__ = '0.1.4'

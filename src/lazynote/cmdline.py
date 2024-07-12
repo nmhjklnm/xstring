@@ -5,10 +5,10 @@ from pathlib import Path
 import click
 from click import Context
 
-from lazynote import __version__
-from lazynote.config import settings
-from lazynote.log import init_log
-from lazynote.manager import SimpleManager
+from xstring import __version__
+from xstring.config import settings
+from xstring.log import init_log
+from xstring.manager import SimpleManager
 
 
 def import_module_or_package(name_or_path):

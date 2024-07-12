@@ -1,7 +1,7 @@
 """Test log"""
 import pytest
 
-from lazynote.log import update_log_level, verbose_formatter
+from xstring.log import update_log_level, verbose_formatter
 
 
 @pytest.mark.parametrize(

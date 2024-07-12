@@ -1,5 +1,5 @@
-from lazynote.manager.base import BaseManager
-from lazynote.manager.simple import SimpleManager,DocstringMode
+from xstring.manager.base import BaseManager
+from xstring.manager.simple import SimpleManager, DocstringMode
 
 __all__ = [
     'BaseManager',

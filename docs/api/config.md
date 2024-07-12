@@ -1,3 +1,3 @@
 # Config Module
 
-::: lazynote.config
+::: xstring.config

@@ -1,3 +1,3 @@
 # Editor Module
 
-::: lazynote.editor
+::: xstring.editor

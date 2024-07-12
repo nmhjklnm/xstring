@@ -1,8 +1,8 @@
 import inspect
 from enum import Enum
 
-
 class MemberType(str, Enum):
+    """Enumeration for different types of members in a module."""
     PACKAGE = "package"
     MODULE = "module"
     CLASS = "class"
@@ -11,8 +11,16 @@ class MemberType(str, Enum):
     ATTRIBUTE = "attribute"
     PROPERTY = "property"
 
+def get_member_type(member: object) -> MemberType:
+    """
+    Determine the type of a given member.
 
-def get_member_type(member):
+    Args:
+        member (object): The member to be checked.
+
+    Returns:
+        MemberType: The type of the member.
+    """
     member_checks = {
         MemberType.PACKAGE: lambda m: inspect.ismodule(m) and hasattr(m, '__path__'),
         MemberType.MODULE: inspect.ismodule,

@@ -1,4 +1,4 @@
-site_name: Lazynote Documentation
+site_name: xstring Documentation
 nav:
   - Home: index.md
   - Features: features.md

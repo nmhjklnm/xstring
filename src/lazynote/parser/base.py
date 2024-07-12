@@ -1,6 +1,4 @@
-from typing import Callable, Dict
-
-from lazynote.schema import MemberType, get_member_type
+from xstring.schema import MemberType, get_member_type
 
 class BaseParser:
     def __init__(self):

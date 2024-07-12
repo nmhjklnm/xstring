@@ -1,13 +1,13 @@
 
 
-# Lazynote 🚀✨
+# xstring 🚀✨
 
-![PyPI](https://img.shields.io/pypi/v/lazynote)
-![License](https://img.shields.io/pypi/l/lazynote)
-![Python](https://img.shields.io/pypi/pyversions/lazynote)
-[![Docs](https://img.shields.io/badge/docs-view%20online-blue)](https://nmhjklnm.github.io/lazynote/)
+![PyPI](https://img.shields.io/pypi/v/xstring)
+![License](https://img.shields.io/pypi/l/xstring)
+![Python](https://img.shields.io/pypi/pyversions/xstring)
+[![Docs](https://img.shields.io/badge/docs-view%20online-blue)](https://nmhjklnm.github.io/xstring/)
 
-**Lazynote** is an AI-powered tool that can automatically generate documentation comments for classes, modules, and packages. It also supports the translation and customization of existing comments. 💡📝
+**xstring** is an AI-powered tool that can automatically generate documentation comments for classes, modules, and packages. It also supports the translation and customization of existing comments. 💡📝
 
 ## Features 🌟
 
@@ -18,19 +18,19 @@
 
 ## Installation 📦
 
-You can easily install Lazynote using `pip`:
+You can easily install xstring using `pip`:
 
 ```sh
-pip install lazynote
+pip install xstring
 ```
 
 ## Quick Start 🚀
 
-Here is a simple example demonstrating how to use Lazynote to automatically generate and manage documentation comments.
+Here is a simple example demonstrating how to use xstring to automatically generate and manage documentation comments.
 
 ```python
 import pytest
-from lazynote.manager import SimpleManager
+from xstring.manager import SimpleManager
 
 manager = SimpleManager(pattern='fill')
 manager.traverse(lazyllm_package.components, 
@@ -39,7 +39,7 @@ manager.traverse(lazyllm_package.components,
 
 ## Features Overview 📚
 
-Lazynote provides the following modes to easily customize all comments across the entire repository using AI and source code:
+xstring provides the following modes to easily customize all comments across the entire repository using AI and source code:
 
 - **TRANSLATE**: Translate existing comments. 🌍
 - **POLISH**: Polish and optimize comments. 💅
@@ -48,7 +48,7 @@ Lazynote provides the following modes to easily customize all comments across th
 
 ## Documentation 📖
 
-For more detailed information and advanced usage, please refer to our [![Docs](https://img.shields.io/badge/docs-view%20online-blue)](https://nmhjklnm.github.io/lazynote/). [![Docs](https://img.shields.io/badge/docs-view%20online-blue)](https://nmhjklnm.github.io/lazynote/)
+For more detailed information and advanced usage, please refer to our [![Docs](https://img.shields.io/badge/docs-view%20online-blue)](https://nmhjklnm.github.io/xstring/). [![Docs](https://img.shields.io/badge/docs-view%20online-blue)](https://nmhjklnm.github.io/xstring/)
 ## Contributing 🌟
 
 Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for more information. 💖

@@ -4,8 +4,8 @@ from __future__ import annotations  # PEP 585
 import pytest
 from click.testing import CliRunner
 
-from lazynote import __version__
-from lazynote.cmdline import main
+from xstring import __version__
+from xstring.cmdline import main
 
 
 @pytest.fixture

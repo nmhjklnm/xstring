@@ -1,3 +1,3 @@
 # Parser Module
 
-::: lazynote.parser
+::: xstring.parser

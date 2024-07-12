@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "lazynote"
+name = "xstring"
 version = "0.1.4"
 description = "AI-powered automatic generation of documentation comments for classes, modules, and packages, including translation of existing comments and lazy customization of docstrings."
 readme = "README.md"
@@ -46,7 +46,7 @@ setuptools = "*"
 six = "^1.16.0"
 
 [tool.poetry.scripts]
-lazynote = "lazynote.cmdline:main"
+xstring = "xstring.cmdline:main"
 
 [build-system]
 requires = ["poetry-core"]

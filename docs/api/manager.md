@@ -1,3 +1,3 @@
 # Manager Module
 
-::: lazynote.manager
+::: xstring.manager

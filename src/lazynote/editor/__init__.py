@@ -1,4 +1,4 @@
-from lazynote.editor.base import BaseEditor
+from xstring.editor.base import BaseEditor
 
 __all__ = [
     'BaseEditor',
