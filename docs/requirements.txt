@@ -2,4 +2,6 @@ mkdocs
 mkdocs-material
 mkdocstrings
 mkdocstrings-python
-xstring
+mkdocs-static-i18n
+mkdocs-section-index
+mkdocs-autorefs
