@@ -14,13 +14,17 @@ import importlib
 import pkgutil
 import asyncio
 import traceback
+from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, TimeElapsedColumn, TimeRemainingColumn, TaskID
+
 
 class DocstringMode(str, Enum):
     """Enumeration for different modes of handling docstrings."""
+
     TRANSLATE = "translate"
     POLISH = "polish"
     CLEAR = "clear"
     FILL = "fill"
+
 
 class BaseManager(BaseModel, ABC):
     """
@@ -33,6 +37,7 @@ class BaseManager(BaseModel, ABC):
         pattern (DocstringMode): The mode for handling docstrings.
         skip_on_error (bool): Whether to skip errors or raise them. Defaults to False.
     """
+
     parser: Optional[BaseParser] = Field(default_factory=BaseParser)
     pattern: DocstringMode
     skip_on_error: bool = False  # Add class attribute
@@ -40,8 +45,8 @@ class BaseManager(BaseModel, ABC):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if self.parser is None:
-            self.parser = BaseParser(skip_modules=kwargs.get('skip_modules', []))
-        self.skip_on_error = kwargs.get('skip_on_error', self.skip_on_error)
+            self.parser = BaseParser(skip_modules=kwargs.get("skip_modules", []))
+        self.skip_on_error = kwargs.get("skip_on_error", self.skip_on_error)
 
     class Config:
         arbitrary_types_allowed = True
@@ -72,7 +77,7 @@ class BaseManager(BaseModel, ABC):
         Returns:
             bool: True if the member is defined in the module, False otherwise.
         """
-        if hasattr(member, '__module__'):
+        if hasattr(member, "__module__"):
             return member.__module__ == module.__name__
         elif isinstance(member, property):
             return member.fget.__module__ == module.__name__
@@ -80,7 +85,7 @@ class BaseManager(BaseModel, ABC):
             return member.__func__.__module__ == module.__name__
         elif isinstance(member, classmethod):
             return member.__func__.__module__ == module.__name__
-        elif hasattr(member, '__wrapped__'):
+        elif hasattr(member, "__wrapped__"):
             return member.__wrapped__.__module__ == module.__name__
         return False
 
@@ -107,23 +112,9 @@ class BaseManager(BaseModel, ABC):
             code (str): The modified code.
         """
         module_file_path = inspect.getfile(module)
-        with open(module_file_path, 'w', encoding='utf-8') as file:
+        with open(module_file_path, "w", encoding="utf-8") as file:
             file.write(code)
 
-    async def _sem_task(self, task, modname: str, semaphore: asyncio.Semaphore) -> None:
-        """
-        Run a task with a semaphore to limit concurrency.
-
-        Args:
-            task: The task to run.
-            modname (str): The module name associated with the task.
-            semaphore (asyncio.Semaphore): The semaphore to limit concurrency.
-        """
-        async with semaphore:
-            try:
-                await task
-            except Exception as e:
-                self._handle_error(f"Skipping {modname} due to import error", e)
 
     def traverse(self, obj: object, skip_modules: Optional[List[str]] = None) -> None:
         """
@@ -137,17 +128,30 @@ class BaseManager(BaseModel, ABC):
             skip_modules = []
 
         if get_member_type(obj) == MemberType.PACKAGE:
-            for importer, modname, ispkg in pkgutil.walk_packages(obj.__path__, obj.__name__ + "."):
-                if any(modname.startswith(skip_mod) for skip_mod in skip_modules):
-                    continue
-                if ispkg:
-                    continue
+            modules = [
+                (importer, modname, ispkg)
+                for importer, modname, ispkg in pkgutil.walk_packages(
+                    obj.__path__, obj.__name__ + "."
+                )
+                if not any(modname.startswith(skip_mod) for skip_mod in skip_modules) and not ispkg
+            ]
 
-                try:
-                    submodule = importlib.import_module(modname)
-                    self.parser.parse(submodule, self)
-                except Exception as e:
-                    self._handle_error(f"Skipping {modname} due to import error", e)
+            with Progress(
+                SpinnerColumn(),
+                "[progress.description]{task.description}",
+                BarColumn(),
+                "[progress.percentage]{task.percentage:>3.0f}%",
+                TimeElapsedColumn(),
+                TimeRemainingColumn(),
+            ) as progress:
+                task_id = progress.add_task("Processing modules...", total=len(modules))
+                for importer, modname, ispkg in modules:
+                    try:
+                        submodule = importlib.import_module(modname)
+                        self.parser.parse(submodule, self)
+                    except Exception as e:
+                        self._handle_error(f"Skipping {modname} due to import error", e)
+                    progress.advance(task_id)
 
         elif get_member_type(obj) == MemberType.MODULE:
             try:
@@ -155,7 +159,12 @@ class BaseManager(BaseModel, ABC):
             except Exception as e:
                 self._handle_error(f"Skipping {obj.__name__} due to import error", e)
 
-    async def atraverse(self, obj: object, skip_modules: Optional[List[str]] = None, max_concurrency: int = 10) -> None:
+    async def atraverse(
+        self,
+        obj: object,
+        skip_modules: Optional[List[str]] = None,
+        max_concurrency: int = 10,
+    ) -> None:
         """
         Asynchronously traverse through the package or module to process docstrings.
 
@@ -171,27 +180,71 @@ class BaseManager(BaseModel, ABC):
         loop = asyncio.get_event_loop()
 
         if get_member_type(obj) == MemberType.PACKAGE:
-            tasks = []
-            for importer, modname, ispkg in pkgutil.walk_packages(obj.__path__, obj.__name__ + "."):
-                if any(modname.startswith(skip_mod) for skip_mod in skip_modules):
-                    continue
-                if ispkg:
-                    continue
+            modules = [
+                (importer, modname, ispkg)
+                for importer, modname, ispkg in pkgutil.walk_packages(
+                    obj.__path__, obj.__name__ + "."
+                )
+                if not any(modname.startswith(skip_mod) for skip_mod in skip_modules) and not ispkg
+            ]
 
-                try:
-                    submodule = importlib.import_module(modname)
-                    task = loop.run_in_executor(None, self.parser.parse, submodule, self)
-                    tasks.append(self._sem_task(task, modname, semaphore))
-                except Exception as e:
-                    self._handle_error(f"Skipping {modname} due to import error", e)
-            await asyncio.gather(*tasks)
+            with Progress(
+                SpinnerColumn(),
+                "[progress.description]{task.description}",
+                BarColumn(),
+                "[progress.percentage]{task.percentage:>3.0f}%",
+                TimeElapsedColumn(),
+                TimeRemainingColumn(),
+            ) as progress:
+                task_id = progress.add_task("Processing modules...", total=len(modules))
+                tasks = []
+                for importer, modname, ispkg in modules:
+                    try:
+                        submodule = importlib.import_module(modname)
+                        task = loop.run_in_executor(
+                            None, self.parser.parse, submodule, self
+                        )
+                        tasks.append(self._sem_task(task, modname, semaphore, progress, task_id))
+                    except Exception as e:
+                        self._handle_error(f"Skipping {modname} due to import error", e)
+                await asyncio.gather(*tasks)
+                progress.update(task_id, completed=len(modules))
 
         elif get_member_type(obj) == MemberType.MODULE:
+            with Progress(
+                SpinnerColumn(),
+                "[progress.description]{task.description}",
+                BarColumn(),
+                "[progress.percentage]{task.percentage:>3.0f}%",
+                TimeElapsedColumn(),
+                TimeRemainingColumn(),
+            ) as progress:
+                task_id = progress.add_task(f"Processing module {obj.__name__}", total=1)
+                try:
+                    task = loop.run_in_executor(None, self.parser.parse, obj, self)
+                    await self._sem_task(task, obj.__name__, semaphore, progress, task_id)
+                except Exception as e:
+                    self._handle_error(f"Skipping {obj.__name__} due to import error", e)
+                progress.update(task_id, completed=1)
+
+    async def _sem_task(self, task, modname: str, semaphore: asyncio.Semaphore, progress: Progress, task_id: TaskID) -> None:
+        """
+        Run a task with a semaphore to limit concurrency.
+
+        Args:
+            task: The task to run.
+            modname (str): The module name associated with the task.
+            semaphore (asyncio.Semaphore): The semaphore to limit concurrency.
+            progress (Progress): The rich progress instance.
+            task_id (TaskID): The task ID for the progress bar.
+        """
+        async with semaphore:
             try:
-                task = loop.run_in_executor(None, self.parser.parse, obj, self)
-                await self._sem_task(task, obj.__name__, semaphore)
+                await task
+                progress.advance(task_id)
             except Exception as e:
-                self._handle_error(f"Skipping {obj.__name__} due to import error", e)
+                self._handle_error(f"Skipping {modname} due to import error", e)
+                progress.advance(task_id)
 
     def modify_docstring(self, module: object) -> Optional[str]:
         """
@@ -208,7 +261,8 @@ class BaseManager(BaseModel, ABC):
             source_code = textwrap.dedent(source_code)
             tree = cst.parse_module(source_code)
             transformer = BaseEditor(
-                gen_docstring=self.gen_docstring, pattern=self.pattern, module=module)
+                gen_docstring=self.gen_docstring, pattern=self.pattern, module=module
+            )
             modified_tree = tree.visit(transformer)
             self._write_code_to_file(module, modified_tree.code)
             return modified_tree.code

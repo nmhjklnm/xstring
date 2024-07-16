@@ -1,5 +1,6 @@
 from xstring.schema import MemberType, get_member_type
 
+
 class BaseParser:
     def __init__(self):
         self.parsers = {
@@ -8,7 +9,7 @@ class BaseParser:
             MemberType.METHOD: self.parse_method,
             MemberType.FUNCTION: self.parse_function,
             MemberType.PROPERTY: self.parse_property,
-            MemberType.ATTRIBUTE: self.parse_attribute
+            MemberType.ATTRIBUTE: self.parse_attribute,
         }
 
     def parse(self, member, manager, **kwargs):

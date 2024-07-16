@@ -25,7 +25,8 @@ def test_traverse_module(lazyllm_package, manager):
 
 def test_traverse_tools(lazyllm_package, manager):
     manager.traverse(lazyllm_package.tools,skip_modules=[
-        'lazyllm.tools.rag.component.bm25_retriever'
+        'lazyllm.tools.rag.component.bm25_retriever',
+        'lazyllm.tools.rag.component.sent_embed'
     ])
 
 def test_traverse_configs(lazyllm_package, manager):

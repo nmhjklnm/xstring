@@ -1,6 +1,7 @@
 from typing import Callable, Optional
 from xstring.manager.base import BaseManager, DocstringMode
 
+
 class DocstringHandler:
     @staticmethod
     def handle_translate(old_docstring: Optional[str], node_code: str) -> str:
@@ -82,6 +83,7 @@ class DocstringHandler:
             return getattr(DocstringHandler, handler_method_name)
         except AttributeError:
             raise ValueError(f"No handler found for pattern: {pattern}")
+
 
 class SimpleManager(BaseManager):
     """

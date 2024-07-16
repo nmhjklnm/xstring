@@ -1,8 +1,11 @@
 from typing import Optional
 from xstring.manager.base import BaseManager
 
+
 class CustomManager(BaseManager):
-    def gen_docstring(self, old_docstring: Optional[str], pattern: str, node_code: str) -> str:
+    def gen_docstring(
+        self, old_docstring: Optional[str], pattern: str, node_code: str
+    ) -> str:
         """
         Custom logic to generate a new docstring.
 
