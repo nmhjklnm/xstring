@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "xstring"
-version = "0.1.4"
+version = "0.1.5"
 description = "AI-powered automatic generation of documentation comments for classes, modules, and packages, including translation of existing comments and lazy customization of docstrings."
 readme = "README.md"
 authors = ["yang chichi <yangchichi@126.com>"]
